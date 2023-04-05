@@ -8,12 +8,9 @@ MONGODB_URL=mongodb://mongodb:27017/users
 USER_API_BASE_URL=https://reqres.in/api
 ```
 
-If you directly using your working machine and MongoDB installed on your machine
-
-```bash
-APP_PORT=3000
-MONGODB_URL=mongodb://mongodb:27017/users
-USER_API_BASE_URL=https://reqres.in/api
+Copy environment variables of the project:
+```
+cp .env.example .env
 ```
 
 You can start the project using the following command
