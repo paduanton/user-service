@@ -7,25 +7,46 @@ import {
   Body,
   Delete,
 } from '@nestjs/common';
+import * as fs from 'fs';
+import { EventPattern, MessagePattern } from '@nestjs/microservices';
 import { downloadFile } from 'src/helpers/download-file.helper';
 import { UsersRepository } from './repository/users.repository';
 import { AvatarRepository } from '../avatar/repository/avatar.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreateAvatarDto } from '../avatar/dto/create-avatar.dto';
 import { UsersService } from './services/users.services';
-import * as fs from 'fs';
+import { EmailService } from 'src/email/services/email.service';
 
 @Controller('api/user')
 export class UsersController {
   constructor(
     private readonly usersRepository: UsersRepository,
-    private userService: UsersService,
     private avatarRepository: AvatarRepository,
+    private userService: UsersService,
+    private emailService: EmailService,
   ) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersRepository.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    const user = await this.usersRepository.create(createUserDto);
+
+    if (user) {
+      const welcomeEmailPayload = {
+        template: {
+          name: 'welcome',
+          data: {
+            firstName: user.first_name,
+            lastName: user.last_name,
+          },
+        },
+        destinations: [user.email],
+        subject: 'Welcome!',
+      };
+
+      await this.emailService.sendWelcomeEmail(welcomeEmailPayload);
+    }
+
+    return user;
   }
 
   @Get(':id')
