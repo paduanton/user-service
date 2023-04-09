@@ -1,11 +1,19 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Param,
+  Response,
+  Get,
+  Post,
+  Body,
+  Delete,
+} from '@nestjs/common';
+import { downloadFile } from 'src/helper';
 import { UsersRepository } from './repository/users.repository';
 import { AvatarRepository } from './repository/avatar.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreateAvatarDto } from './dto/create-avatar.dto';
 import { UsersService } from './services/users.services';
 import * as fs from 'fs';
-import * as https from 'https';
 
 @Controller('api/user')
 export class UsersController {
@@ -33,7 +41,7 @@ export class UsersController {
       const user = await this.userService.getUser(id).toPromise();
       const imagePath = `./static/${user.id}.jpg`;
 
-      await this._download(user.avatar, imagePath);
+      await downloadFile(user.avatar, imagePath);
 
       const base64Image = fs.readFileSync(imagePath, 'base64');
       const parsedBase64Image = `data:image/jpg;base64,${base64Image}`;
@@ -50,48 +58,19 @@ export class UsersController {
   }
 
   @Delete(':id/avatar')
-  async remove(@Param('id') id: number) {
+  async remove(@Param('id') id: number, @Response() response) {
     const avatar = await this.avatarRepository.findOneByUserId(id);
+
+    if (!avatar) {
+      return response.status(404).send({
+        message: 'Invalid user, please try again!',
+      });
+    }
 
     fs.unlinkSync(avatar.file_system_path);
 
-    return this.avatarRepository.removeByUserId(id);
-  }
-  // TODO - Create helper layer to export functions like this
-  private async _download(url, filePath) {
-    return new Promise((resolve, reject) => {
-      const file = fs.createWriteStream(filePath);
-      let fileInfo = null;
+    this.avatarRepository.removeByUserId(id);
 
-      const request = https.get(url, (response) => {
-        if (response.statusCode !== 200) {
-          fs.unlink(filePath, () => {
-            reject(
-              new Error(`Failed to get '${url}' (${response.statusCode})`),
-            );
-          });
-          return;
-        }
-
-        fileInfo = {
-          mime: response.headers['content-type'],
-          size: parseInt(response.headers['content-length'], 10),
-        };
-
-        response.pipe(file);
-      });
-
-      file.on('finish', () => resolve(fileInfo));
-
-      request.on('error', (err) => {
-        fs.unlink(filePath, () => reject(err));
-      });
-
-      file.on('error', (err) => {
-        fs.unlink(filePath, () => reject(err));
-      });
-
-      request.end();
-    });
+    return response.status(204).send('');
   }
 }

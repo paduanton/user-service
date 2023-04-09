@@ -8,7 +8,7 @@ export type AvatarDocument = Avatar & Document;
 })
 export class Avatar {
   @Prop({ required: true })
-  user_id: string;
+  user_id: number;
 
   @Prop({ required: true })
   hash: string;

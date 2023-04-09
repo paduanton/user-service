@@ -9,7 +9,7 @@ import {
 export class CreateAvatarDto {
   @IsString()
   @IsNotEmpty()
-  user_id: string;
+  user_id: number;
 
   @IsString()
   @IsNotEmpty()
