@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as https from 'https';
 
-export const downloadFile = async (url, filePath) => {
+export const downloadFile = async (url, filePath): Promise<void> => {
   return new Promise((resolve, reject) => {
     const file = fs.createWriteStream(filePath);
     let fileInfo = null;
