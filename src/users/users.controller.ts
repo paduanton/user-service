@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { downloadFile } from 'src/helpers/download-file.helper';
 import { UsersRepository } from './repository/users.repository';
-import { AvatarRepository } from './repository/avatar.repository';
+import { AvatarRepository } from '../avatar/repository/avatar.repository';
 import { CreateUserDto } from './dto/create-user.dto';
-import { CreateAvatarDto } from './dto/create-avatar.dto';
+import { CreateAvatarDto } from '../avatar/dto/create-avatar.dto';
 import { UsersService } from './services/users.services';
 import * as fs from 'fs';
 
