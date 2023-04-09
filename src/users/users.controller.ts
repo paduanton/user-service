@@ -7,7 +7,7 @@ import {
   Body,
   Delete,
 } from '@nestjs/common';
-import { downloadFile } from 'src/helper';
+import { downloadFile } from 'src/helpers/download-file.helper';
 import { UsersRepository } from './repository/users.repository';
 import { AvatarRepository } from './repository/avatar.repository';
 import { CreateUserDto } from './dto/create-user.dto';
