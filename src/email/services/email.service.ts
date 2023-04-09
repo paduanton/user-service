@@ -3,7 +3,6 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { SES } from 'aws-sdk';
 import { ConfigService } from 'src/config/config.service';
-import { join } from 'path';
 import { readFileSync } from 'fs';
 
 enum EmailTemplates {
