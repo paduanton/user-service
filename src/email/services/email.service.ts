@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { SES } from 'aws-sdk';
@@ -44,14 +44,10 @@ export class EmailService {
     destinations: Array<string>;
     subject: string;
   }): Promise<void> {
-    this.logger.log(payload);
-
     const { template, destinations, subject } = payload;
-    const templatePath = join(
-      __dirname,
-      './templates/',
-      `${EmailTemplates[template.name]}.html`,
-    );
+    const templatePath = `src/email/templates/${
+      EmailTemplates[template.name]
+    }.html`;
 
     let _content = readFileSync(templatePath, 'utf-8');
 
@@ -79,6 +75,11 @@ export class EmailService {
         },
       })
       .promise()
-      .catch((error) => this.logger.error(error));
+      .catch((error) => this.logger.error('sendEmail Error: ', error));
+
+    await this.client.send(
+      { cmd: 'sent-email' },
+      `Email sent to: ${destinations[0]}`,
+    );
   }
 }

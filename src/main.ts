@@ -1,4 +1,3 @@
-
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
@@ -11,7 +10,9 @@ async function bootstrap() {
 
   const logger = new Logger();
   const configService = new ConfigService();
-  
+
+  const appPort = process.env.APP_PORT;
+
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.connectMicroservice({
     transport: Transport.RMQ,
@@ -22,8 +23,10 @@ async function bootstrap() {
       prefetchCount: 1,
     },
   });
-  
+
   await app.startAllMicroservices();
-  await app.listen(process.env.APP_PORT);
+  await app.listen(appPort);
+
+  logger.log(`Application running on port: ${appPort}`);
 }
 bootstrap();

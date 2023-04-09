@@ -6,9 +6,11 @@ import {
   Post,
   Body,
   Delete,
+  Logger,
 } from '@nestjs/common';
 import * as fs from 'fs';
 import { EventPattern, MessagePattern } from '@nestjs/microservices';
+
 import { downloadFile } from 'src/helpers/download-file.helper';
 import { UsersRepository } from './repository/users.repository';
 import { AvatarRepository } from '../avatar/repository/avatar.repository';
@@ -19,12 +21,26 @@ import { EmailService } from 'src/email/services/email.service';
 
 @Controller('api/user')
 export class UsersController {
+  private readonly logger = new Logger(UsersController.name);
+
   constructor(
     private readonly usersRepository: UsersRepository,
     private avatarRepository: AvatarRepository,
     private userService: UsersService,
     private emailService: EmailService,
   ) {}
+
+  @MessagePattern({ cmd: 'sent-email' })
+  async getSentEmailStatus(message) {
+    this.logger.log(message);
+
+    return message;
+  }
+
+  @EventPattern('send-email')
+  async sendEmail(emailPayload) {
+    await this.emailService.sendEmail(emailPayload);
+  }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -33,7 +49,7 @@ export class UsersController {
     if (user) {
       const welcomeEmailPayload = {
         template: {
-          name: 'welcome',
+          name: 'WELCOME',
           data: {
             firstName: user.first_name,
             lastName: user.last_name,
