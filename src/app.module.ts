@@ -9,10 +9,10 @@ import { AvatarModule } from './avatar/avatar.module';
 
 @Module({
   imports: [
+    HttpModule,
     MongooseModule.forRoot(process.env.MONGODB_URL),
     UsersModule,
     AvatarModule,
-    HttpModule,
   ],
   controllers: [AppController],
   providers: [AppService],

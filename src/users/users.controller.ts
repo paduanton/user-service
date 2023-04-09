@@ -63,7 +63,7 @@ export class UsersController {
 
     if (!avatar) {
       return response.status(404).send({
-        message: 'Invalid user, please try again!',
+        message: 'Invalid avatar information, please try again!',
       });
     }
 
