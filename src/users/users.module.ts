@@ -35,8 +35,8 @@ import { ConfigService } from 'src/config/config.service';
         useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
-            urls: [`${configService.get('rb_url')}`],
-            queue: `${configService.get('mailer_queue')}`,
+            urls: [`${configService.get('rabbitMQURL')}`],
+            queue: `${configService.get('mailerQueue')}`,
             queueOptions: {
               durable: false,
             },

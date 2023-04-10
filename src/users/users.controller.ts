@@ -44,9 +44,9 @@ export class UsersController {
 
   @Post()
   async create(@Body() userDto: UserDto) {
-    const user = await this.usersRepository.create(userDto);
+    const user: UserDto = await this.usersRepository.create(userDto);
 
-    if (user) {
+    if (!!user) {
       const welcomeEmailPayload = {
         template: {
           name: 'WELCOME',
@@ -71,25 +71,25 @@ export class UsersController {
   }
 
   @Get(':id/avatar')
-  async findAvatar(@Param('id') id: number) {
-    const avatar = await this.avatarRepository.findOneByUserId(id);
+  async findAvatar(@Param('id') id: number): Promise<AvatarDto> {
+    const avatar: AvatarDto = await this.avatarRepository.findOneByUserId(id);
 
-    if (!avatar?.user_id) {
+    if (!avatar) {
       const user = await this.userService.getUser(id).toPromise();
       const imagePath = `./static/${user.id}.jpg`;
 
       await downloadFile(user.avatar, imagePath);
 
-      const base64Image = fs.readFileSync(imagePath, 'base64');
+      const base64Image: string = fs.readFileSync(imagePath, 'base64');
       const parsedBase64Image = `data:image/jpg;base64,${base64Image}`;
 
-      const avatar: AvatarDto = {
+      const newAvatar: AvatarDto = {
         file_system_path: imagePath,
         user_id: user.id,
         hash: parsedBase64Image,
       };
 
-      return this.avatarRepository.create(avatar);
+      return this.avatarRepository.create(newAvatar);
     }
 
     return avatar;
@@ -97,7 +97,7 @@ export class UsersController {
 
   @Delete(':id/avatar')
   async remove(@Param('id') id: number, @Response() response) {
-    const avatar = await this.avatarRepository.findOneByUserId(id);
+    const avatar: AvatarDto = await this.avatarRepository.findOneByUserId(id);
 
     if (!avatar) {
       return response.status(404).send({

@@ -3,11 +3,8 @@ import { config } from 'dotenv';
 config();
 
 interface Config {
-  rb_url: string;
-  mailer_queue: string;
-  redis_host: string;
-  redis_port: string;
-  redis_password: string;
+  rabbitMQURL: string;
+  mailerQueue: string;
   aws: {
     accessKeyId: string;
     secretAccessKey: string;
@@ -20,11 +17,8 @@ interface Config {
 export class ConfigService {
   private config = {} as Config;
   constructor() {
-    this.config.rb_url = process.env.RABBITMQ_URL;
-    this.config.mailer_queue = process.env.RABBITMQ_MAILER_QUEUE;
-    this.config.redis_host = process.env.REDIS_HOST;
-    this.config.redis_port = process.env.REDIS_PORT;
-    this.config.redis_password = process.env.REDIS_PASSWORD;
+    this.config.rabbitMQURL = process.env.RABBITMQ_URL;
+    this.config.mailerQueue = process.env.RABBITMQ_MAILER_QUEUE;
     this.config.aws = {
       accessKeyId: process.env.AWS_ACCESS_KEY,
       secretAccessKey: process.env.AWS_SECRET_KEY,

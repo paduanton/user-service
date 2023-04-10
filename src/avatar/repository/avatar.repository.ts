@@ -20,7 +20,7 @@ export class AvatarRepository {
     return this.avatarModel.findOne({ user_id: userId });
   }
 
-  async removeByUserId(id: number) {
+  async removeByUserId(id: number): Promise<AvatarDocument> {
     return this.avatarModel.findOneAndRemove({ user_id: id });
   }
 }

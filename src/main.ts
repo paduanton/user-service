@@ -14,11 +14,12 @@ async function bootstrap() {
   const appPort = process.env.APP_PORT;
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
   app.connectMicroservice({
     transport: Transport.RMQ,
     options: {
-      urls: [`${configService.get('rb_url')}`],
-      queue: `${configService.get('mailer_queue')}`,
+      urls: [`${configService.get('rabbitMQURL')}`],
+      queue: `${configService.get('mailerQueue')}`,
       queueOptions: { durable: false },
       prefetchCount: 1,
     },
