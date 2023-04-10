@@ -18,6 +18,7 @@ import { UserDto } from './dto/user.dto';
 import { AvatarDto } from '../avatar/dto/avatar.dto';
 import { UsersService } from './services/users.services';
 import { EmailService } from 'src/email/services/email.service';
+import { Observable } from 'rxjs';
 
 @Controller('api/user')
 export class UsersController {
@@ -66,7 +67,13 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: number): Observable<{
+    id: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+    avatar: string;
+  }> {
     return this.userService.getUser(id);
   }
 

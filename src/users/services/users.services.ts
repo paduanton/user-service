@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +15,13 @@ export class UsersService {
       .pipe(map((response) => response.data));
   }
 
-  getUser(id) {
+  getUser(id): Observable<{
+    id: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+    avatar: string;
+  }> {
     return this.http
       .get(`${this.userAPIBaseURL}/users/${id}`)
       .pipe(map((response) => response.data.data));
