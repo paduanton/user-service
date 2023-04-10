@@ -14,8 +14,8 @@ import { EventPattern, MessagePattern } from '@nestjs/microservices';
 import { downloadFile } from 'src/helpers/download-file.helper';
 import { UsersRepository } from './repository/users.repository';
 import { AvatarRepository } from '../avatar/repository/avatar.repository';
-import { CreateUserDto } from './dto/create-user.dto';
-import { CreateAvatarDto } from '../avatar/dto/create-avatar.dto';
+import { UserDto } from './dto/user.dto';
+import { AvatarDto } from '../avatar/dto/avatar.dto';
 import { UsersService } from './services/users.services';
 import { EmailService } from 'src/email/services/email.service';
 
@@ -43,8 +43,8 @@ export class UsersController {
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    const user = await this.usersRepository.create(createUserDto);
+  async create(@Body() userDto: UserDto) {
+    const user = await this.usersRepository.create(userDto);
 
     if (user) {
       const welcomeEmailPayload = {
@@ -83,11 +83,12 @@ export class UsersController {
       const base64Image = fs.readFileSync(imagePath, 'base64');
       const parsedBase64Image = `data:image/jpg;base64,${base64Image}`;
 
-      const avatar: CreateAvatarDto = {
+      const avatar: AvatarDto = {
         file_system_path: imagePath,
         user_id: user.id,
         hash: parsedBase64Image,
       };
+
       return this.avatarRepository.create(avatar);
     }
 
