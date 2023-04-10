@@ -2,13 +2,6 @@
 
 To start the project, create an `.env` file at the root of the project
 
-```bash
-APP_PORT=3000
-MONGODB_URL=mongodb://mongodb:27017/users
-USER_API_BASE_URL=https://reqres.in/api
-```
-
-Copy environment variables of the project:
 ```
 cp .env.example .env
 ```
@@ -17,12 +10,6 @@ You can start the project using the following command
 
 ```bash
 docker-compose up --build
-```
-
-OR
-
-```bash
-yarn start:dev
 ```
 
 ## Endpoints
@@ -40,7 +27,7 @@ BODY:
     "email": "george.bluth@reqres.in",
     "first_name": "George",
     "last_name": "Bluth",
-    "avatar_url": "https://reqres.in/img/faces/1-image.jpg"
+    "avatar": "https://reqres.in/img/faces/1-image.jpg"
 }
 ```
 
