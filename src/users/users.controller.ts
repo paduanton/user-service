@@ -11,13 +11,13 @@ import {
 import * as fs from 'fs';
 import { EventPattern, MessagePattern } from '@nestjs/microservices';
 
-import { downloadFile } from 'src/helpers/download-file.helper';
+import { downloadFile } from '../helpers/download-file.helper';
 import { UsersRepository } from './repository/users.repository';
 import { AvatarRepository } from '../avatar/repository/avatar.repository';
 import { UserDto } from './dto/user.dto';
 import { AvatarDto } from '../avatar/dto/avatar.dto';
 import { UsersService } from './services/users.services';
-import { EmailService } from 'src/email/services/email.service';
+import { EmailService } from '../email/services/email.service';
 import { Observable } from 'rxjs';
 
 @Controller('api/user')
