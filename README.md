@@ -6,10 +6,21 @@ To start the project, create an `.env` file at the root of the project
 cp .env.example .env
 ```
 
-You can start the project using the following command
+Install dependencies
+
+```bash
+npm install
+```
+
+Now you can start the project using the following command
 
 ```bash
 docker-compose up --build
+```
+
+Run automated testing files
+```bash
+npm run test
 ```
 
 ## Endpoints
